@@ -116,7 +116,8 @@ public:
     void drawSmoothCurve();
 
     void drawCubicCurve(vec2f p0, vec2f p1, vec2f p2, vec2f p3);
-
+signals:
+    void insertList(int row,QString label);
 public slots:
     void clearScreen();
 protected:

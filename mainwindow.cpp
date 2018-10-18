@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //signals
     connect(ui->pushButtonClear, SIGNAL(released()), ui->glwidget , SLOT(clearScreen()));
     connect(ui->pushButtonAddPoint, SIGNAL(released()), this , SLOT(addPointController()));
+    connect(ui->glwidget, SIGNAL(insertList(int,QString)), this , SLOT(insertList(int,QString)));
 }
 
 MainWindow::~MainWindow()
@@ -20,5 +21,10 @@ MainWindow::~MainWindow()
 void MainWindow::addPointController()
 {
     ui->glwidget->startAddPointMode();
+}
+
+void MainWindow::insertList(int row, QString label)
+{
+    ui->listWidget->insertItem(row,label);
 }
 

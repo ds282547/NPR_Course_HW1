@@ -47,7 +47,7 @@ void GLWidget::paintGL()
     drawSmoothCurve();
 
     for(vec2f &pt : pointControllers){
-        //drawCircle(static_cast<int>(pt.x), static_cast<int>(pt.y) , 2);
+        drawCircle(static_cast<int>(pt.x), static_cast<int>(pt.y) , 2);
     }
 
 
@@ -63,7 +63,10 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::addPointController(int x,int y)
 {
+    static int index = 0;
+
     pointControllers.push_back({static_cast<GLfloat>(x),static_cast<GLfloat>(y)});
+    emit insertList(index,QStringLiteral("Point %1").arg(index++));
     update();
 }
 
@@ -99,6 +102,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
+
     if(addPointMode){
         addPointController(event->x(),event->y());
     }
@@ -212,7 +216,7 @@ void GLWidget::drawCubicCurve(GLWidget::vec2f p0, GLWidget::vec2f p1, GLWidget::
     for(i = 0;i<=step;++i){
         t = (GLfloat)i/step;
         omt = 1.0f - t;
-        vec2f B = p0*omt*omt*omt+p1*((t-t*t*2+t*t*t)*3)+p1*((t*t-t*t*t)*3)+p3*(t*t*t);
+        vec2f B = p0*(omt*omt*omt)+p1*((t-t*t*2+t*t*t)*3)+p2*((t*t-t*t*t)*3)+p3*(t*t*t);
         glVertex2fv(B());
     }
     glEnd();
