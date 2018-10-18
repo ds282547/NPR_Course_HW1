@@ -19,6 +19,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::addPointController()
 {
-    ui->glwidget->addPointController();
+    ui->glwidget->startAddPointMode();
 }
 

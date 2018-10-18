@@ -35,4 +35,5 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
-LIBS += opengl32.lib $$quote(D:/Course/NPR/HW1_Qt/HW1_Qt/GL/glut32.lib)
+
+LIBS += $$quote("$$PWD\GL\glut32.lib")

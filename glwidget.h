@@ -18,10 +18,13 @@ public:
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
-    void addPointController();
+    void addPointController(int x, int y);
     void drawCircle(int x,int y,int r);
 
     void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void startAddPointMode();
 public slots:
     void clearScreen();
 protected:
@@ -33,6 +36,7 @@ protected:
         }
     };
     QVector<vec2> pointControllers;
+    bool addPointMode;
 };
 
 #endif // GLWIDGET_H
