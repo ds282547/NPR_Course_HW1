@@ -28,6 +28,12 @@ public:
         vec2f operator +(vec2f a){
             return {x+a.x,y+a.y};
         }
+        vec2f operator -(vec2f &a){
+            return {x-a.x,y-a.y};
+        }
+        void absCoord(){
+            if(x<0) x=-x;if(y<0) y=-y;
+        }
     };
     /*friend vec2f operator+(GLWidget::vec2f &a,GLWidget::vec2f &b){
         return {a.x+b.x,a.y+b.y};
@@ -41,7 +47,12 @@ public:
         vec2 operator +(vec2 &a){
             return {x+a.x,y+a.y};
         }
-
+        vec2 operator -(vec2 &a){
+            return {x-a.x,y-a.y};
+        }
+        void absCoord(){
+            if(x<0) x=-x;if(y<0) y=-y;
+        }
         vec2f conv2f(){
             return {static_cast<GLfloat>(x),static_cast<GLfloat>(y)};
         }

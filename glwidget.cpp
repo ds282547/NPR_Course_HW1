@@ -47,7 +47,7 @@ void GLWidget::paintGL()
     drawSmoothCurve();
 
     for(vec2f &pt : pointControllers){
-        drawCircle(static_cast<int>(pt.x), static_cast<int>(pt.y) , 4);
+        //drawCircle(static_cast<int>(pt.x), static_cast<int>(pt.y) , 2);
     }
 
 
@@ -117,12 +117,12 @@ void GLWidget::startAddPointMode()
 void GLWidget::drawSmoothCurve()
 {
     //refs: https://www.particleincell.com/2012/bezier-splines/
-    if (pointControllers.size()<4) return;
+    if (pointControllers.size()<2) return;
     //
     QVector<vec2f> &K = pointControllers;
-    unsigned n = pointControllers.size()-1, i;
-    QVector<vec2> p1(n);
-    QVector<vec2> p2(n);
+    int n = pointControllers.size()-1,i;
+    QVector<vec2f> p1(n);
+    QVector<vec2f> p2(n);
     QVector<GLfloat> a(n);
     QVector<GLfloat> b(n);
     QVector<GLfloat> c(n);
@@ -142,6 +142,7 @@ void GLWidget::drawSmoothCurve()
     /*right segment*/
     a[n-1]=2;b[n-1]=7;c[n-1]=0;
     r[n-1] = 8*K[n-1].x+K[n].x;
+
     /*solves Ax=b with the Thomas algorithm (from Wikipedia)*/
     for (i = 1; i < n; i++)
     {
@@ -151,12 +152,47 @@ void GLWidget::drawSmoothCurve()
     }
 
     p1[n-1].x = r[n-1]/b[n-1];
-    for (i = n - 2; i >= 0; --i)
-        p1[i].x = (r[i] - c[i] * p1[i+1].x) / b[i];
 
+    for (i = n - 2; i >= 0; --i) {
+        p1[i].x = (r[i] - c[i] * p1[i+1].x) / b[i];
+    }
     for (i=0;i<n-1;i++)
         p2[i].x=2*K[i+1].x-p1[i+1].x;
         p2[n-1].x=0.5*(K[n].x+p1[n-1].x);
+
+    // calc Y
+    /*left most segment*/
+    a[0]=0;b[0]=2;c[0]=1;
+    r[0]=K[0].y+2*K[1].y;
+    /*internal segments*/
+    for (i = 1; i < n - 1; i++)
+    {
+        a[i]=1;
+        b[i]=4;
+        c[i]=1;
+        r[i] = 4 * K[i].y + 2 * K[i+1].y;
+    }
+    /*right segment*/
+    a[n-1]=2;b[n-1]=7;c[n-1]=0;
+    r[n-1] = 8*K[n-1].y+K[n].y;
+    /*solves Ax=b with the Thomas algorithm (from Wikipedia)*/
+    for (i = 1; i < n; i++)
+    {
+        GLfloat m = a[i]/b[i-1];
+        b[i] = b[i] - m * c[i - 1];
+        r[i] = r[i] - m *r[i-1];
+    }
+
+    p1[n-1].y = r[n-1]/b[n-1];
+    for (i = n - 2; i >= 0; --i)
+        p1[i].y = (r[i] - c[i] * p1[i+1].y) / b[i];
+
+    for (i=0;i<n-1;i++)
+        p2[i].y=2*K[i+1].y-p1[i+1].y;
+        p2[n-1].y=0.5*(K[n].y+p1[n-1].y);
+
+    for (i=0;i<n;++i)
+        drawCubicCurve(pointControllers[i],p1[i],p2[i],pointControllers[i+1]);
 
 }
 
@@ -165,7 +201,16 @@ void GLWidget::drawCubicCurve(GLWidget::vec2f p0, GLWidget::vec2f p1, GLWidget::
 
     glBegin(GL_LINE_STRIP);
     GLfloat t,omt;
-    for(t = 0;t<=1.1f;t+=0.1f){
+    vec2f d = p3-p0;
+    d.absCoord();
+    int step,i;
+    if(d.x>d.y)
+        step = d.x/2;
+    else
+        step = d.y/2;
+
+    for(i = 0;i<=step;++i){
+        t = (GLfloat)i/step;
         omt = 1.0f - t;
         vec2f B = p0*omt*omt*omt+p1*((t-t*t*2+t*t*t)*3)+p1*((t*t-t*t*t)*3)+p3*(t*t*t);
         glVertex2fv(B());
