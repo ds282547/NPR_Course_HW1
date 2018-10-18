@@ -10,6 +10,13 @@ void GLWidget::clearScreen()
     glClearColor(1,1,1,1);
 }
 
+void GLWidget::debugMat3(GLWidget::mat3 m)
+{
+    qDebug() << m.m[0] << "," << m.m[1] << "," << m.m[2];
+    qDebug() << m.m[3] << "," << m.m[4] << "," << m.m[5];
+    qDebug() << m.m[6] << "," << m.m[7] << "," << m.m[8];
+}
+
 
 void GLWidget::initializeGL()
 {
@@ -27,21 +34,20 @@ void GLWidget::paintGL()
     glLoadIdentity();
     glPointSize(1);
     glLineWidth(1);
-    bool firstPt = true;
-    vec2 ptLast;
 
-    for(vec2 &pt : pointControllers){
-        if (firstPt){
-            firstPt = false;
-        } else {
-            glColor4f(1,0,0,1);
+
+    if (pointControllers.size()>=2)
+        for(auto it=pointControllers.begin()+1;it!=pointControllers.end();++it){
+            glColor4f(0,0,0,1);
             glBegin(GL_LINES);
-                glVertex2iv(ptLast());
-                glVertex2iv(pt());
+                //glVertex2iv((*(it-1))());
+                //glVertex2iv((*(it))());
             glEnd();
         }
-        drawCircle(pt.x, pt.y , 4);
-        ptLast = pt;
+    drawSmoothCurve();
+
+    for(vec2f &pt : pointControllers){
+        drawCircle(static_cast<int>(pt.x), static_cast<int>(pt.y) , 4);
     }
 
 
@@ -57,7 +63,7 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::addPointController(int x,int y)
 {
-    pointControllers.push_back({x,y});
+    pointControllers.push_back({static_cast<GLfloat>(x),static_cast<GLfloat>(y)});
     update();
 }
 
@@ -107,3 +113,63 @@ void GLWidget::startAddPointMode()
 {
     addPointMode = true;
 }
+
+void GLWidget::drawSmoothCurve()
+{
+    //refs: https://www.particleincell.com/2012/bezier-splines/
+    if (pointControllers.size()<4) return;
+    //
+    QVector<vec2f> &K = pointControllers;
+    unsigned n = pointControllers.size()-1, i;
+    QVector<vec2> p1(n);
+    QVector<vec2> p2(n);
+    QVector<GLfloat> a(n);
+    QVector<GLfloat> b(n);
+    QVector<GLfloat> c(n);
+    QVector<GLfloat> r(n);
+
+    /*left most segment*/
+    a[0]=0;b[0]=2;c[0]=1;
+    r[0]=K[0].x+2*K[1].x;
+    /*internal segments*/
+    for (i = 1; i < n - 1; i++)
+    {
+        a[i]=1;
+        b[i]=4;
+        c[i]=1;
+        r[i] = 4 * K[i].x + 2 * K[i+1].x;
+    }
+    /*right segment*/
+    a[n-1]=2;b[n-1]=7;c[n-1]=0;
+    r[n-1] = 8*K[n-1].x+K[n].x;
+    /*solves Ax=b with the Thomas algorithm (from Wikipedia)*/
+    for (i = 1; i < n; i++)
+    {
+        GLfloat m = a[i]/b[i-1];
+        b[i] = b[i] - m * c[i - 1];
+        r[i] = r[i] - m *r[i-1];
+    }
+
+    p1[n-1].x = r[n-1]/b[n-1];
+    for (i = n - 2; i >= 0; --i)
+        p1[i].x = (r[i] - c[i] * p1[i+1].x) / b[i];
+
+    for (i=0;i<n-1;i++)
+        p2[i].x=2*K[i+1].x-p1[i+1].x;
+        p2[n-1].x=0.5*(K[n].x+p1[n-1].x);
+
+}
+
+void GLWidget::drawCubicCurve(GLWidget::vec2f p0, GLWidget::vec2f p1, GLWidget::vec2f p2, GLWidget::vec2f p3)
+{
+
+    glBegin(GL_LINE_STRIP);
+    GLfloat t,omt;
+    for(t = 0;t<=1.1f;t+=0.1f){
+        omt = 1.0f - t;
+        vec2f B = p0*omt*omt*omt+p1*((t-t*t*2+t*t*t)*3)+p1*((t*t-t*t*t)*3)+p3*(t*t*t);
+        glVertex2fv(B());
+    }
+    glEnd();
+}
+
