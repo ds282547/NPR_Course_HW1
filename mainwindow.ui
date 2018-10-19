@@ -12,7 +12,8 @@
   </property>
   <property name="font">
    <font>
-    <family>Calibri</family>
+    <family>Arial</family>
+    <pointsize>10</pointsize>
    </font>
   </property>
   <property name="windowTitle">
@@ -106,7 +107,10 @@
        </layout>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="groupBoxPointAttr">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -126,37 +130,61 @@
          <item row="1" column="1">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>TextLabel</string>
+            <string>Iink quantity</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QSlider" name="horizontalSlider">
+          <widget class="QSlider" name="sliderInk">
            <property name="maximumSize">
             <size>
              <width>120</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="minimum">
+            <number>10</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>TextLabel</string>
+            <string>Pressure</string>
            </property>
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QSlider" name="horizontalSlider_2">
+          <widget class="QSlider" name="sliderPreesure">
            <property name="maximumSize">
             <size>
              <width>120</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="minimum">
+            <number>10</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>10</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -164,7 +192,7 @@
           </widget>
          </item>
          <item row="4" column="2">
-          <widget class="QTextEdit" name="textEdit_2">
+          <widget class="QTextEdit" name="textEditPressure">
            <property name="maximumSize">
             <size>
              <width>50</width>
@@ -180,22 +208,38 @@
            <property name="horizontalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
           </widget>
          </item>
          <item row="5" column="1">
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>TextLabel</string>
+            <string>Moving speed</string>
            </property>
           </widget>
          </item>
          <item row="6" column="1">
-          <widget class="QSlider" name="horizontalSlider_3">
+          <widget class="QSlider" name="sliderSpeed">
            <property name="maximumSize">
             <size>
              <width>120</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="minimum">
+            <number>10</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>10</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -203,7 +247,7 @@
           </widget>
          </item>
          <item row="6" column="2">
-          <widget class="QTextEdit" name="textEdit_3">
+          <widget class="QTextEdit" name="textEditSpeed">
            <property name="maximumSize">
             <size>
              <width>50</width>
@@ -218,11 +262,18 @@
            </property>
            <property name="horizontalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
          <item row="2" column="2">
-          <widget class="QTextEdit" name="textEdit_4">
+          <widget class="QTextEdit" name="textEditInk">
            <property name="maximumSize">
             <size>
              <width>50</width>
@@ -237,6 +288,13 @@
            </property>
            <property name="horizontalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -299,6 +357,7 @@
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

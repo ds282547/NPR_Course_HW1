@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QListWidget>
+#include <QTimer>
 
 class GLWidget : public QGLWidget
 {
@@ -16,7 +17,18 @@ class GLWidget : public QGLWidget
 public:
 
     explicit GLWidget(QWidget *parent = 0);
-
+    struct vec3f{
+        GLfloat x;
+        GLfloat y;
+        GLfloat z;
+        GLfloat* operator ()(){
+            return &x;
+        }
+        GLfloat operator [](int i){
+            return *(&x+i);
+        }
+    };
+    struct vec2;
     struct vec2f{
         GLfloat x;
         GLfloat y;
@@ -32,10 +44,20 @@ public:
         vec2f operator -(vec2f &a){
             return {x-a.x,y-a.y};
         }
+        vec2 conv2i(){
+            return {(int)x,(int)y};
+        }
         void absCoord(){
             if(x<0) x=-x;if(y<0) y=-y;
         }
+        float angle(){
+            return atan2f(y,-x);
+        }
+        float distance(){
+            return sqrtf(x*x+y*y);
+        }
     };
+
     /*friend vec2f operator+(GLWidget::vec2f &a,GLWidget::vec2f &b){
         return {a.x+b.x,a.y+b.y};
     }*/
@@ -107,31 +129,64 @@ public:
     void paintGL();
     void resizeGL(int w, int h);
     void addPointController(int x, int y);
-    void drawCircle(int x,int y,int r);
-
+    void drawCircle(int x,int y,int r,bool sel);
+    void drawRotatedEclipse(int x,int y,float a,float b,float expr,float rotAngle);
+    void drawRotatedEclipseOutline(int x,int y,float a,float b,float rotAngle);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
-    void startAddPointMode();
-    void endAddPointMode();
+
     void removePoint();
 
     void drawSmoothCurve();
+    vec2f getDirectionOfCurve(int seg, float t);
+    vec2f getPointOfCurve(int seg, float t);
 
-    void drawCubicCurve(vec2f p0, vec2f p1, vec2f p2, vec2f p3);
+
+    void drawCubicCurve(int seg, vec2f p0, vec2f p1, vec2f p2, vec2f p3);
 
     void setPointList(QListWidget *list);
+
+    void setDrawMode(bool drawmode);
+    void drawBrush();
+    void drawEdit();
+
+    const int currentInkQ = 80;
+    const int currentPressure = 60;
+    const int currentSpeed = 60;
 signals:
 public slots:
     void clearScreen();
+    void listItemChange(int row);
+    void toogleAddPointMode(bool sw);
+protected:
+    const int POINT_SIZE = 4;
+    const int POINT_SEL_SIZE = 6;
 protected:
     void debugMat3(mat3 m);
     QVector<vec2f> pointControllers;
+    //modes
     bool addPointMode;
-
+    bool drawMode;
+    //selection
     QListWidget *pointList;
-    QListWidgetItem *lastSelectedItem;
+    QListWidgetItem *lastSelectedItem; // for list
+    int selectedPoint; // for GL widget in screen
+    //draw eclipse
+    float getk(const float a, const float b, const float x, const float y);
+    //drag
+    vec2 dragOffset;
+    bool dragingPoint;
+
+    //point controller
+    QVector<vec2f> p1;
+    QVector<vec2f> p2;
+
+    //argLength
+    QVector< QVector<float> > isometricPoints;
+
+
 };
 
 

@@ -36,4 +36,4 @@ FORMS += \
         mainwindow.ui
 
 
-LIBS += $$quote("$$PWD\GL\glut32.lib")
+LIBS += "$$PWD\GL\glut32.lib"
