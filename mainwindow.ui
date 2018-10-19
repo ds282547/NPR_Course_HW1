@@ -42,7 +42,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QListWidget" name="listWidget">
+       <widget class="QListWidget" name="pointListWidget">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -91,7 +91,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButtonRemovePoint">
           <property name="maximumSize">
            <size>
             <width>90</width>

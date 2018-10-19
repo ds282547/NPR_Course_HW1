@@ -10,7 +10,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //signals
     connect(ui->pushButtonClear, SIGNAL(released()), ui->glwidget , SLOT(clearScreen()));
     connect(ui->pushButtonAddPoint, SIGNAL(released()), this , SLOT(addPointController()));
-    connect(ui->glwidget, SIGNAL(insertList(int,QString)), this , SLOT(insertList(int,QString)));
+    connect(ui->pushButtonRemovePoint, SIGNAL(released()), this , SLOT(removePointController()));
+
+    ui->glwidget->setPointList(ui->pointListWidget);
+
 }
 
 MainWindow::~MainWindow()
@@ -23,8 +26,10 @@ void MainWindow::addPointController()
     ui->glwidget->startAddPointMode();
 }
 
-void MainWindow::insertList(int row, QString label)
+void MainWindow::removePointController()
 {
-    ui->listWidget->insertItem(row,label);
+    ui->glwidget->removePoint();
 }
+
+
 

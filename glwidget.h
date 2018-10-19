@@ -8,6 +8,7 @@
 #include <QFrame>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QListWidget>
 
 class GLWidget : public QGLWidget
 {
@@ -111,19 +112,26 @@ public:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+
     void startAddPointMode();
+    void endAddPointMode();
+    void removePoint();
 
     void drawSmoothCurve();
 
     void drawCubicCurve(vec2f p0, vec2f p1, vec2f p2, vec2f p3);
+
+    void setPointList(QListWidget *list);
 signals:
-    void insertList(int row,QString label);
 public slots:
     void clearScreen();
 protected:
     void debugMat3(mat3 m);
     QVector<vec2f> pointControllers;
     bool addPointMode;
+
+    QListWidget *pointList;
+    QListWidgetItem *lastSelectedItem;
 };
 
 

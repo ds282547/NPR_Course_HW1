@@ -17,7 +17,9 @@ public:
 
 public slots:
     void addPointController();
-    void insertList(int row,QString label);
+    void removePointController();
+
+
 private:
     Ui::MainWindow *ui;
 };

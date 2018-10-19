@@ -3,6 +3,7 @@
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent), addPointMode(false)
 {
+
 }
 
 void GLWidget::clearScreen()
@@ -64,9 +65,24 @@ void GLWidget::resizeGL(int w, int h)
 void GLWidget::addPointController(int x,int y)
 {
     static int index = 0;
+    static bool first = true;
 
-    pointControllers.push_back({static_cast<GLfloat>(x),static_cast<GLfloat>(y)});
-    emit insertList(index,QStringLiteral("Point %1").arg(index++));
+    QListWidgetItem *item = new QListWidgetItem(QStringLiteral("Point %1").arg(index));
+    lastSelectedItem = pointList->currentItem();
+    //
+    if (first){
+        pointControllers.push_back({static_cast<GLfloat>(x),static_cast<GLfloat>(y)});
+        first = false;
+    }else
+        pointControllers.insert(pointList->currentRow(),{static_cast<GLfloat>(x),static_cast<GLfloat>(y)});
+
+    //
+    pointList->insertItem(pointList->currentRow(), item);
+    pointList->setCurrentItem(lastSelectedItem);
+    pointList->setFocus();
+
+
+    index++;
     update();
 }
 
@@ -116,6 +132,20 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 void GLWidget::startAddPointMode()
 {
     addPointMode = true;
+}
+
+void GLWidget::endAddPointMode()
+{
+
+}
+
+void GLWidget::removePoint()
+{
+
+    if (pointList->selectedItems().at(0)->text()==QString("<New Point>"))
+        return;
+    qDeleteAll(pointList->selectedItems());
+    pointList->setFocus();
 }
 
 void GLWidget::drawSmoothCurve()
@@ -220,5 +250,14 @@ void GLWidget::drawCubicCurve(GLWidget::vec2f p0, GLWidget::vec2f p1, GLWidget::
         glVertex2fv(B());
     }
     glEnd();
+}
+
+void GLWidget::setPointList(QListWidget *list)
+{
+    pointList = list;
+
+    QListWidgetItem *item = new QListWidgetItem("<New Point>");
+    pointList->addItem(item);
+    pointList->setCurrentRow(0);
 }
 
